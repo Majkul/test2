@@ -1,15 +1,11 @@
 #!/bin/bash
 
-ZONE=$(gcloud compute project-info describe \
-  --format="value(commonInstanceMetadata.items[google-compute-default-zone])")
-
-REGION="${ZONE%-*}"
-
+# Przetwarzanie parametrów
 while [[ $# -gt 0 ]]; do
   case $1 in
     --zone)
       ZONE="$2"
-      REGION="${ZONE%-*}"
+      REGION="${ZONE%-*}"  # automatycznie ustaw region
       shift 2
       ;;
     --region)
@@ -24,6 +20,9 @@ while [[ $# -gt 0 ]]; do
 done
 
 PROJECT_ID=$(gcloud config get-value project)
+
+echo "Używana strefa: $ZONE"
+echo "Używany region: $REGION"
 
 for i in 1 2 3; do
     gcloud compute instances create web$i \
