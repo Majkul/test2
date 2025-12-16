@@ -4,6 +4,25 @@ ZONE=$(gcloud compute project-info describe \
   --format="value(commonInstanceMetadata.items[google-compute-default-zone])")
 
 REGION="${ZONE%-*}"
+
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    --zone)
+      ZONE="$2"
+      REGION="${ZONE%-*}"
+      shift 2
+      ;;
+    --region)
+      REGION="$2"
+      shift 2
+      ;;
+    *)
+      echo "Nieznany parametr: $1"
+      exit 1
+      ;;
+  esac
+done
+
 PROJECT_ID=$(gcloud config get-value project)
 
 for i in 1 2 3; do
